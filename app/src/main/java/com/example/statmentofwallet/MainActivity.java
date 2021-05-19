@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             Dcurser = stortdata.get(i);
             arrayList.add(new Data(Dcurser.getId(),Dcurser.getMoney(),Dcurser.getReason(),Dcurser.getDay(),Dcurser.getTime()));
             capital = capital + Integer.valueOf(Dcurser.getMoney().substring(0,Dcurser.getMoney().length()-1));
-            Toast.makeText(MainActivity.this,arrayList.get(i).getMoney(),Toast.LENGTH_LONG).show();
+            //Toast.makeText(MainActivity.this,arrayList.get(i).getMoney(),Toast.LENGTH_LONG).show();
         }
         Collections.reverse(arrayList);
         current.setText(Integer.toString(capital));
@@ -65,19 +65,21 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent,1);
             }
         });
-/*
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this,"Tedt",Toast.LENGTH_SHORT).show();
-                databaseHelper.deliteOne(arrayList.get(position));
+                //Toast.makeText(MainActivity.this,"Test",Toast.LENGTH_SHORT).show();
+                /*databaseHelper.deliteOne(arrayList.get(position));
                 capital = capital + Integer.valueOf(arrayList.get(position).getMoney().substring(0,arrayList.get(position).getMoney().length()-1));
                 current.setText(Integer.toString(capital));
                 arrayList.remove(position);
+
+                 */
             }
         });
 
- */
+
     }
     public void Del(int position){
         Toast.makeText(MainActivity.this,"Tedt",Toast.LENGTH_SHORT).show();
@@ -95,12 +97,14 @@ public class MainActivity extends AppCompatActivity {
                 //Update ListAdapter arrayList
                 Collections.reverse(arrayList);
                 arrayList.add(new Data(1,data.getStringExtra("amount"),data.getStringExtra("reason"),data.getStringExtra("day"),data.getStringExtra("hour")));
+
                 Collections.reverse(arrayList);
                 //Update Current Capital
                 capital = capital + Integer.valueOf(data.getStringExtra("amount").substring(0,data.getStringExtra("amount").length()-1));
                 current.setText(Integer.toString(capital));
                 //Save Data in SQLite
-                databaseHelper.addData(arrayList.get(arrayList.size()-1));
+                //Toast.makeText(MainActivity.this,arrayList.get().getMoney(),Toast.LENGTH_LONG).show();
+                databaseHelper.addData(arrayList.get(0));
             }else {
                 boolean del = data.getBooleanExtra("del",false);
                 //Delit old transaktion if "del" true

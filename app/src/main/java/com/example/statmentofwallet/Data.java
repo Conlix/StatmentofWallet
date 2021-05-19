@@ -6,9 +6,9 @@ public class Data {
     String day;
     String time;
     String reason;
-    public Data(int ID, String Monay, String Reason, String Day, String Time){
+    public Data(int ID, String Money, String Reason, String Day, String Time){
         id = ID;
-        money = Monay;
+        money = Money;
         reason = Reason;
         day = Day;
         time = Time;

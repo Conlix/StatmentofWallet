@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,22 +31,30 @@ public class MyListAdapter extends ArrayAdapter<Data> {
         LayoutInflater layoutInflater = LayoutInflater.from(rcontext);
         convertView = layoutInflater.inflate(rresouce, parent, false);
 
-        EditText money = (EditText) convertView.findViewById(R.id.money);
-        EditText reason = (EditText) convertView.findViewById(R.id.reason);
-        EditText date = (EditText) convertView.findViewById(R.id.date);
-        EditText hour = (EditText) convertView.findViewById(R.id.time);
+        TextView money = (TextView) convertView.findViewById(R.id.money);
+        TextView reason = (TextView) convertView.findViewById(R.id.reason);
+        TextView date = (TextView) convertView.findViewById(R.id.date);
+        TextView hour = (TextView) convertView.findViewById(R.id.time);
 
-        money.setEnabled(false);
-        reason.setEnabled(false);
-        date.setEnabled(false);
-        hour.setEnabled(false);
+        //money.setEnabled(false);
+        //reason.setEnabled(false);
+        //date.setEnabled(false);
+        //hour.setEnabled(false);
 
         money.setText(getItem(position).getMoney());
         reason.setText(getItem(position).getReason());
         date.setText(getItem(position).getDay());
         hour.setText(getItem(position).getTime());
+/*
+        reason.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(),"Works",Toast.LENGTH_LONG).show();
+            }
+        });
 
 
+ */
         return convertView;
     }
 }
