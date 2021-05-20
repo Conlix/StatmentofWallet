@@ -1,13 +1,15 @@
 package com.example.statmentofwallet;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,9 +25,10 @@ public class MainActivity extends AppCompatActivity {
     Button neu;
     EditText current,change;
     DatabaseHelper databaseHelper;
-    final ArrayList<Data> arrayList = new ArrayList<>();
+    ArrayList<Data> arrayList = new ArrayList<>();
     List<Data> stortdata;
-    int capital = 0;
+    int capital = 0,delposition,highesID = 0;
+    MyListAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,10 +54,13 @@ public class MainActivity extends AppCompatActivity {
             //Toast.makeText(MainActivity.this,arrayList.get(i).getMoney(),Toast.LENGTH_LONG).show();
         }
         Collections.reverse(arrayList);
+        if(arrayList.size() >= 1){
+            highesID = arrayList.get(0).getId();
+        }
         current.setText(Integer.toString(capital));
 
-        MyListAdapter adapter = new MyListAdapter(this, R.layout.row,arrayList);
-
+        adapter = new MyListAdapter(this, R.layout.row,arrayList);
+        adapter.notifyDataSetChanged();
         lv.setAdapter(adapter);
 
         neu.setOnClickListener(new View.OnClickListener() {
@@ -69,13 +76,15 @@ public class MainActivity extends AppCompatActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(MainActivity.this,"Test",Toast.LENGTH_SHORT).show();
-                /*databaseHelper.deliteOne(arrayList.get(position));
-                capital = capital + Integer.valueOf(arrayList.get(position).getMoney().substring(0,arrayList.get(position).getMoney().length()-1));
-                current.setText(Integer.toString(capital));
-                arrayList.remove(position);
 
-                 */
+                //Toast.makeText(MainActivity.this,"Test",Toast.LENGTH_SHORT).show();
+                Intent delcheck = new Intent(MainActivity.this, checked.class);
+                //delcheck.putExtra("arrayList",arrayList);
+                delcheck.putExtra("Position",position);
+                delposition = position;
+                startActivityForResult(delcheck,2);
+
+
             }
         });
 
@@ -96,18 +105,28 @@ public class MainActivity extends AppCompatActivity {
             if(resultCode==RESULT_OK){
                 //Update ListAdapter arrayList
                 Collections.reverse(arrayList);
-                arrayList.add(new Data(1,data.getStringExtra("amount"),data.getStringExtra("reason"),data.getStringExtra("day"),data.getStringExtra("hour")));
+                highesID++;
+                arrayList.add(new Data(highesID,data.getStringExtra("amount"),data.getStringExtra("reason"),data.getStringExtra("day"),data.getStringExtra("hour")));
 
                 Collections.reverse(arrayList);
                 //Update Current Capital
                 capital = capital + Integer.valueOf(data.getStringExtra("amount").substring(0,data.getStringExtra("amount").length()-1));
                 current.setText(Integer.toString(capital));
                 //Save Data in SQLite
-                //Toast.makeText(MainActivity.this,arrayList.get().getMoney(),Toast.LENGTH_LONG).show();
                 databaseHelper.addData(arrayList.get(0));
-            }else {
-                boolean del = data.getBooleanExtra("del",false);
-                //Delit old transaktion if "del" true
+            }
+        }
+        if(requestCode == 2){
+            if(resultCode==RESULT_OK){
+                int position = data.getIntExtra("Position",-1);
+                //int position = delposition + 1;
+                Data delobjekt = arrayList.get(position);
+
+                databaseHelper.deliteOne(delobjekt);
+                capital = capital - Integer.valueOf(delobjekt.getMoney().substring(0,delobjekt.getMoney().length()-1));
+                current.setText(Integer.toString(capital));
+                arrayList.remove(position);
+                adapter.notifyDataSetChanged();
             }
         }
     }

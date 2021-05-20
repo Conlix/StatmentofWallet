@@ -59,19 +59,22 @@ public class popup extends Activity {
             @Override
             public void onClick(View v) {
                 try{
-
                     amount = Integer.parseInt(transaktion.getText().toString());
                 }catch (Exception ex){
                     amount = 0;
                 }
 
-                reason = Reason.getText().toString();
+                try{
+                    reason = Reason.getText().toString();
+                }catch (Exception ex){
+                    reason = "---";
+                }
 
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("day",dayofweek);
                 resultIntent.putExtra("reason",reason);
                 resultIntent.putExtra("hour",hour_of+"h");
-                resultIntent.putExtra("amount",Integer.toString(amount)+ "€");
+                resultIntent.putExtra("amount",(amount)+ "€");
 
                 setResult(RESULT_OK,resultIntent);
                 finish();
@@ -82,7 +85,6 @@ public class popup extends Activity {
             @Override
             public void onClick(View v) {
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra("del",true);
                 setResult(RESULT_CANCELED,resultIntent);
                 finish();
             }
